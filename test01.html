@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html><head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>test01</title>
+  <meta name="viewport" content="width=device-width">
+  <meta http-equiv="Content-Script-Type" content="text/javascript">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <style>
+    p { margin: 20px;
+      --bw: 1px;
+      --bc: transparent;
+      --sz: 10px;
+      --gap: 30px;
+      line-height: 1px;
+    }
+    p b { border: var(--bw) solid var(--bc); }
+    p > b {
+      display: block; float: left;
+      margin-right: var(--gap); margin-bottom: var(--gap);
+    }
+    b b { display: inline-block; min-height: var(--sz); min-width: var(--sz); }
+    p, b { padding: 0; border-radius: 0; }
+    p:after { display: block; content: " "; clear: both; }
+  </style>
+</head><body>
+
+<p>
+  <b style="--bc: green; padding: var(--bw);"><b></b></b>
+  <b style="--bc: blue; --bw: 8px; padding: var(--bw);"><b></b></b>
+</p>
+
+<h2>As canvas:</h2><p></p>
+<h2>As image:</h2><p><img src="about:blank"></p>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script>
+setTimeout(function capture() {
+  const paras = document.getElementsByTagName('p');
+  html2canvas(paras[0]).then(function captured(canvas) {
+    paras[1].appendChild(canvas);
+    canvas.toBlob(function recvImgBlob(blob) {
+      // eslint-disable-next-line n/no-unsupported-features/node-builtins
+      paras[2].firstChild.src = URL.createObjectURL(blob);
+    });
+  }, 'image/png');
+}, 200);
+</script>
+
+</body></html>
